@@ -8,7 +8,7 @@ TELEGRAM_TOKEN = '6585105940:AAGqHS7weZ2KVJPZScri2x4PzSeVgjtls5I'
 
 # Настройки GitHub репозитория
 GITHUB_OWNER = 'azam2802'
-GITHUB_REPO = 'repository_name'
+GITHUB_REPO = 'test'
 
 # Настройки API GitHub
 GITHUB_API_URL = f'https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/commits'
@@ -24,9 +24,6 @@ logger = logging.getLogger(__name__)
 def send_message(bot: Bot, chat_id: int, message: str):
     bot.send_message(chat_id=chat_id, text=message)
 
-# Функция для обработки команды /start
-def start(update: Update, context: CallbackContext):
-    send_message(update.effective_chat.id, "Привет! Я телеграм бот, который отслеживает коммиты в репозитории на GitHub.")
 
 # Функция для проверки новых коммитов
 def check_commits(context: CallbackContext):
@@ -50,11 +47,11 @@ def check_commits(context: CallbackContext):
 
 def main():
     # Инициализация телеграм бота
-    updater = Updater(TELEGRAM_TOKEN)
+    updater = Updater(TELEGRAM_TOKEN, use_context=True)
     dp = updater.dispatcher
 
     # Добавление обработчика для команды /start
-    dp.add_handler(CommandHandler("start", start))
+
 
     # Запуск регулярной проверки новых коммитов (каждую минуту)
     updater.job_queue.run_repeating(check_commits, interval=60, context=TELEGRAM_TOKEN)
